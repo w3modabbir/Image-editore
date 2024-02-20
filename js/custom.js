@@ -1,14 +1,19 @@
 let fileInput = document.querySelector(".file"),
 filterOperation = document.querySelectorAll(".filter button");
-previewImg = document.querySelector(".preview_img img");
 filterName = document.querySelector(".filter_info .name");
 filterValue = document.querySelector(".filter_info .value");
 filterSlider = document.querySelector(".slider input");
+roteOperation = document.querySelectorAll(".rotate button");
+previewImg = document.querySelector(".preview_img img");
+resentBtn = document.querySelector(".reset_btn");
 chooseImgBtn = document.querySelector(".choose_img");
+saveImgBtn = document.querySelector(".save_img");
 
 let brightness = "100", saturation = "100", inversion = "0", grayscale = "0";
+let rotate = 0, flipHorizontal = 1, flipVertical = 1;
 
 const applyFilters = () =>{
+    previewImg.style.transform = `rotate(${rotate}deg) scale(${flipVertical}, ${flipHorizontal})`;
     previewImg.style.filter = `brightness(${brightness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`
 }
 
@@ -17,6 +22,7 @@ const loadImg = () =>{
     if(!file) return;
     previewImg.src = URL.createObjectURL(file);
     previewImg.addEventListener("load", () => {
+        resentBtn.click();
         document.querySelector(".container").classList.remove("disable");
     })
 }
@@ -66,6 +72,54 @@ const updateFilter = () =>{
     applyFilters();
 }
 
+roteOperation.forEach(option =>{
+    option.addEventListener("click", ()=>{
+        if(option.id === "left"){
+            rotate -= 90;
+        }
+        else if(option.id === "right"){
+            rotate += 90;
+        }
+        else if(option.id === "horizontal"){
+            flipHorizontal = flipHorizontal === 1 ? -1 : 1;
+        }
+        else if(option.id === "vertical"){
+            flipVertical = flipVertical === 1 ? -1 : 1;
+        }
+        applyFilters();
+    });
+});
+const resentFilterBtn = () =>{
+    brightness = "100", saturation = "100", inversion = "0", grayscale = "0";
+    rotate = 0, flipHorizontal = 1, flipVertical = 1;
+    filterOperation[0].click(); 
+    applyFilters();
+}
+
+// save images btn part 
+const saveImg = () =>{
+    const canvas = document.createElement("canvas");
+    const abc = canvas.getContext("2d");
+    canvas.width = previewImg.naturalWidth;
+    canvas.height = previewImg.naturalHeight;
+
+    abc.filter = `brightness(${brightness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`
+    abc.translate(canvas.width / 2, canvas.height / 2)
+    if(rotate !== 0){
+        abc.rotate(rotate * Math.PI / 180);
+    }
+    abc.scale(flipVertical, flipHorizontal );
+    abc.drawImage(previewImg, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+    
+    const link = document.createElement("a");
+    link.download = "image.jpg";
+    link.href = canvas.toDataURL();
+    link.click();
+
+}
+
 fileInput.addEventListener("change", loadImg);
 filterSlider.addEventListener("input", updateFilter)
+resentBtn.addEventListener("click", resentFilterBtn)
+saveImgBtn.addEventListener("click", saveImg)
 chooseImgBtn.addEventListener("click", () => fileInput.click());

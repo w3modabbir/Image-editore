@@ -21,6 +21,7 @@ h1,h2,h3,h4,h5,h6,p{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: rgba(51, 241, 255, 0.202);
 }
 .container{
     width: 800px;
@@ -59,24 +60,7 @@ h1,h2,h3,h4,h5,h6,p{
     text-transform: capitalize;
     padding-bottom: 15px !important;
 }
-/* .img_editore_panel .rotate button{
-    border: none;
-    outline: none;
-    background-color: transparent;
-    width: 30px;
-    height: 30px;
-    background-color: aqua;
-    overflow: hidden;
-    
-} */
 
-.img_editore_panel .option{
-    /* display: flex; */
-    /* gap: 10px;
-    flex-wrap: wrap;
-    justify-content: space-between; */
-    
-}
 .img_editore_panel button {
    height: 40px;
    font-size: 16px;
